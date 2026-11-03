@@ -112,6 +112,42 @@ body.toponly .nall{display:none}
 .btn .cnt{font-weight:400;opacity:.8}
 body.staronly .q:not(.starred){display:none}
 body.staronly .grp:not(:has(.q.starred)),body.staronly section.sec:not(:has(.q.starred)){display:none}
+/* Lecture summary: a reading panel at the top of each lecture, before its questions */
+.sum{margin:14px 0 22px;border:1px solid var(--rule);border-top:3px solid var(--accent);border-radius:0 0 8px 8px;background:var(--panel)}
+.sum>summary{list-style:none;cursor:pointer;padding:12px 16px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-family:var(--sans)}
+.sum>summary::-webkit-details-marker{display:none}
+.sum>summary .t{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.sum>summary .m{font-size:.8rem;color:var(--ink-3)}
+.sum>summary .tg{margin-left:auto;font-size:.78rem;font-weight:600;color:var(--ink-2)}
+.sum[open]>summary .tg::after{content:"Collapse ▴"}
+.sum:not([open])>summary .tg::after{content:"Read the summary ▾"}
+.sumbody{padding:0 16px 16px}
+.sumbody>p,.sumbody>ul,.sumbody>ol,.sumbody>h3{max-width:74ch}
+.sumbody .bp{font-size:1.06rem;line-height:1.6;color:var(--ink);margin:0 0 6px;padding:10px 14px;background:var(--paper);border-left:3px solid var(--accent);border-radius:0 4px 4px 0}
+.sumbody h3{font-family:var(--serif);font-weight:600;font-size:1.12rem;margin:22px 0 4px;text-wrap:balance;color:var(--ink)}
+.sumbody p{margin:.45em 0;line-height:1.62}
+.sumbody ul,.sumbody ol{margin:.4em 0;padding-left:1.25em}
+.sumbody li{margin:.18em 0;line-height:1.55}
+.sumbody b{font-weight:600;color:var(--accent)}
+.sumbody .tw{overflow-x:auto;margin:.6em 0;max-width:100%}
+.sumbody table{border-collapse:collapse;font-family:var(--sans);font-size:.88rem;line-height:1.4;min-width:100%}
+.sumbody th,.sumbody td{border:1px solid var(--rule-2);padding:5px 8px;text-align:left;vertical-align:top}
+.sumbody th{background:var(--accent-soft);font-weight:700;color:var(--ink)}
+.sumbody td{background:var(--paper)}
+.sumbody figure{margin:10px 0 4px}
+.sumbody figure img{display:block;width:100%;max-width:640px;height:auto;border:1px solid var(--rule-2);border-radius:4px;background:#fff;cursor:zoom-in}
+.sumbody figcaption{font-family:var(--sans);font-size:.8rem;color:var(--ink-2);margin-top:3px}
+.sumbody figcaption small{color:var(--ink-3)}
+.sumbox{margin-top:20px;padding:10px 14px;border-radius:6px;border:1px solid var(--rule-2);background:var(--paper)}
+.sumbox .lab{font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:2px}
+.sumbox.mk{border-left:4px solid var(--accent)}
+.sumbox.mk .lab{color:var(--accent)}
+.sumbox.tr{border-left:4px solid var(--amber);background:var(--amber-soft)}
+.sumbox.tr .lab{color:var(--amber)}
+.sumbox ul{margin:4px 0 0}
+.sumend{font-family:var(--sans);font-size:.8rem;color:var(--ink-3);margin-top:14px}
+.sumend a{color:var(--accent)}
+body.nosum .sum,body.staronly .sum,body.searching .sum{display:none}
 .empty{font-family:var(--sans);color:var(--ink-3);padding:24px 0}
 .foot{margin-top:40px;font-family:var(--sans);font-size:.78rem;color:var(--ink-3)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -124,11 +160,12 @@ body.staronly .grp:not(:has(.q.starred)),body.staronly section.sec:not(:has(.q.s
 <a class="home" href="https://yoelplutchok.github.io/gi/">← All GI question pages</a><style>.home{display:inline-block;margin-top:20px;font-family:var(--sans);font-size:.84rem;font-weight:600;color:var(--accent);text-decoration:none}.home:hover{text-decoration:underline}</style><header class="mast">
   <div class="eyebrow">GI exam · Mon Nov 23 2026 · Medical Physiology I</div>
   <h1>GI Physiology Practice Questions</h1>
-  <p class="lede" id="lede">Clicker, interactive and TA-review questions made for the GI physiology lectures (2020–2025), in the order this year&#x27;s lectures teach them. Similar questions sit together in a shaded box. Tap an answer to see why it is right, why the others are wrong, and the slides that teach it.</p>
+  <p class="lede" id="lede">Each lecture opens with a summary of what it teaches. Then come the clicker, interactive and TA-review questions made for the GI physiology lectures (2020–2025), in the order this year&#x27;s lectures teach them. Similar questions sit together in a shaded box. Tap an answer to see why it is right, why the others are wrong, and the slides that teach it.</p>
   <div class="tally" id="tally"></div>
   <div class="controls">
     <button class="btn" id="toponly" type="button" aria-pressed="false" title="One question from each group of similar questions (the clearest, newest version), at most 50 per lecture; groups asked most often across years come first">Top questions only <span class="cnt" id="topcnt"></span></button>
     <button class="btn" id="staronly" type="button" aria-pressed="false">★ Starred only</button>
+    <button class="btn" id="nosum" type="button" aria-pressed="false" hidden>Hide summaries</button>
     <button class="btn" id="reset" type="button">Clear my answers</button>
     <input id="q" type="search" placeholder="Search questions (e.g. secretin, MMC, SGLT1)" aria-label="Search questions">
   </div>
@@ -188,6 +225,24 @@ function resetCard(el){
 function score(){ const v=Object.entries(done).filter(([k,x])=>byId[k]&&x!=="seen"); const ok=v.filter(([k,x])=>x==="ok").length;
   $("#score").innerHTML=v.length?`Score <b>${ok}</b> / ${v.length} (${Math.round(100*ok/v.length)}%)`:""; }
 
+// ---- lecture summary panel (read first, then the questions)
+const SUM=D.sum||{};
+function sumPanel(l){
+  const S=SUM[l.id]; if(!S) return "";
+  const tw=h=>h.replace(/<table>/g,'<div class="tw"><table>').replace(/<\/table>/g,"</table></div>");
+  const words=(S.bp+" "+S.sec.map(s=>s.html).join(" ")).replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length;
+  let h=`<details class="sum" open><summary><span class="t">Lecture summary</span><span class="m">${S.sec.length} parts · about ${Math.max(1,Math.round(words/200))} min read · then the questions</span><span class="tg"></span></summary><div class="sumbody">`;
+  if(S.bp) h+=`<p class="bp">${S.bp}</p>`;
+  for(const s of S.sec){
+    h+=`<h3>${s.h}</h3>${tw(s.html)}`;
+    h+=s.figs.map(f=>`<figure><img loading="lazy" src="${f.src}" alt="${esc(f.cap)}"><figcaption>${esc(f.cap)} <small>· ${esc(f.where)}</small></figcaption></figure>`).join("");
+  }
+  if(S.mk.length) h+=`<div class="sumbox mk"><span class="lab">Key facts to remember</span><ul>${S.mk.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+  if(S.tr.length) h+=`<div class="sumbox tr"><span class="lab">Easy to mix up</span><ul>${S.tr.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+  h+=`<p class="sumend">End of summary. The ${esc(l.id.split("-")[1])} questions start below.</p></div></details>`;
+  return h;
+}
+
 // ---- build the page
 let toc=`<h3>Lectures</h3><ol>`, body="";
 for(const l of D.lectures){
@@ -196,7 +251,7 @@ for(const l of D.lectures){
   for(const g of gs){ const cards=g.q.map(q=>card(q,tag+"·"+(++k))).join("");
     inner+=g.q.length>1?`<div class="grp"><div class="ghead">${g.q.length} similar questions · <span>${esc(g.label)}</span></div>${cards}</div>`:cards; }
   toc+=`<li><a href="#${l.id}"><span class="id">${tag}</span>${esc(l.t)}</a><span class="n"><span class="nall">${k}</span><span class="ntop">${nt}</span></span></li>`;
-  body+=`<section class="sec" id="${l.id}"><div class="sechead"><h2><span class="id">${esc(l.id)}</span> ${esc(l.t)}</h2><span class="n"><span class="nall">${k} questions</span><span class="ntop">top ${nt} of ${k}</span></span></div>${inner}</section>`;
+  body+=`<section class="sec" id="${l.id}"><div class="sechead"><h2><span class="id">${esc(l.id)}</span> ${esc(l.t)}</h2><span class="n"><span class="nall">${k} questions</span><span class="ntop">top ${nt} of ${k}</span></span></div>${sumPanel(l)}${inner}</section>`;
 }
 $("#toc").innerHTML=toc+`</ol>`; $("#body").innerHTML=body;
 document.querySelectorAll("article.q").forEach(el=>{ const d=done[el.dataset.id]; if(d) answer(el,byId[el.dataset.id],(d==="ok"||d==="seen")?null:d); });
@@ -210,17 +265,20 @@ document.addEventListener("click",e=>{
   if(t.classList.contains("again")&&el){ delete done[el.dataset.id]; store.set(KEY+"-done",done); resetCard(el); score(); return; }
   if(t.classList.contains("star")&&el){ const id=el.dataset.id; if(stars[id]) delete stars[id]; else stars[id]=1; store.set(KEY+"-stars",stars);
     t.setAttribute("aria-pressed",!!stars[id]); t.textContent=stars[id]?"★":"☆"; el.classList.toggle("starred",!!stars[id]); return; }
-  if(t.tagName==="IMG"&&t.closest(".slides")){ const lb=document.createElement("div"); lb.id="lb"; lb.innerHTML=`<img src="${t.getAttribute("src")}" alt="">`; lb.onclick=()=>lb.remove(); document.body.appendChild(lb); }
+  if(t.tagName==="IMG"&&(t.closest(".slides")||t.closest(".sumbody"))){ const lb=document.createElement("div"); lb.id="lb"; lb.innerHTML=`<img src="${t.getAttribute("src")}" alt="">`; lb.onclick=()=>lb.remove(); document.body.appendChild(lb); }
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ const lb=document.getElementById("lb"); if(lb) lb.remove(); } });
 $("#topcnt").textContent="("+D.groups.reduce((a,g)=>a+g.q.filter(q=>q.t).length,0)+")";
 $("#toponly").onclick=function(){ const on=this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",on); document.body.classList.toggle("toponly",on); try{localStorage.setItem(KEY+"-top",on?"1":"0")}catch(e){} };
 try{ if(/[?&]top\b/.test(location.search)||localStorage.getItem(KEY+"-top")==="1") $("#toponly").click(); }catch(e){ if(/[?&]top\b/.test(location.search)) $("#toponly").click(); }
+if(Object.keys(SUM).length){ const b=$("#nosum"); b.hidden=false;
+  b.onclick=function(){ const on=this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",on); this.textContent=on?"Show summaries":"Hide summaries"; document.body.classList.toggle("nosum",on); try{localStorage.setItem(KEY+"-nosum",on?"1":"0")}catch(e){} };
+  try{ if(localStorage.getItem(KEY+"-nosum")==="1") b.click(); }catch(e){} }
 $("#staronly").onclick=function(){ const on=this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",on); document.body.classList.toggle("staronly",on); window.scrollTo(0,0); };
 $("#reset").onclick=$("#reset2").onclick=()=>{ for(const k of Object.keys(done)) delete done[k]; store.set(KEY+"-done",done); document.querySelectorAll("article.q").forEach(resetCard); score(); };
 new IntersectionObserver(([en])=>{ $("#reset2").hidden=en.isIntersecting; }).observe(document.querySelector(".controls"));
 // ---- search
-$("#q").oninput=()=>{ const s=$("#q").value.trim().toLowerCase();
+$("#q").oninput=()=>{ const s=$("#q").value.trim().toLowerCase(); document.body.classList.toggle("searching",!!s);
   document.querySelectorAll("article.q").forEach(el=>{ const q=byId[el.dataset.id]; el.classList.toggle("done-hide",!!s&&!(q.s+" "+q.o.join(" ")+" "+q.at+" "+q._g.label).toLowerCase().includes(s)); });
   document.querySelectorAll(".grp").forEach(g=>g.classList.toggle("done-hide",!g.querySelector("article.q:not(.done-hide)")));
   document.querySelectorAll("section.sec").forEach(sc=>sc.classList.toggle("done-hide",!sc.querySelector("article.q:not(.done-hide)"))); };
