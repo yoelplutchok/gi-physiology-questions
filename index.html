@@ -101,6 +101,16 @@ section.sec{padding-top:26px}
 .done-hide{display:none!important}
 #lb{position:fixed;inset:0;z-index:50;background:var(--veil);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));cursor:zoom-out}
 #lb img{max-width:100%;max-height:100%;background:#fff;border-radius:4px}
+/* Nov 6 (histology): legend line decoding the letters/arrows printed on a picture */
+.lgd{font-family:var(--sans);font-size:.84rem;line-height:1.5;color:var(--ink);margin-top:5px;max-width:828px}
+.lgd .lgl{font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-right:6px}
+.lgd b{font-weight:700;color:var(--ink)}
+.lgd .sep{color:var(--ink-3);padding:0 .35em}
+.primer .lgd{max-width:560px}
+.qlgd{margin:-4px 0 10px}
+#lb{flex-direction:column;gap:10px}
+#lb img{min-height:0;flex:0 1 auto;object-fit:contain}
+#lb .lgd{flex:none;max-width:min(100%,1100px);background:var(--paper);border-radius:4px;padding:8px 12px;font-size:.92rem}
 body.toponly .q:not(.top):not(.shown){display:none}
 body.toponly .grp:not(:has(.q.top,.q.shown)),body.toponly section.sec:not(:has(.q.top)){display:none}
 body.toponly .grp{background:none;padding:0;margin:0}
@@ -291,7 +301,7 @@ span.hlu{text-decoration:underline;text-decoration-color:var(--red);text-decorat
 <a class="home" href="https://yoelplutchok.github.io/gi/">← All GI question pages</a><style>.home{display:inline-block;margin-top:20px;font-family:var(--sans);font-size:.84rem;font-weight:600;color:var(--accent);text-decoration:none}.home:hover{text-decoration:underline}</style><header class="mast">
   <div class="eyebrow">GI exam · Mon Nov 23 2026 · Medical Physiology I</div>
   <h1>GI Physiology Practice Questions</h1>
-  <p class="lede" id="lede">The clicker, discussion-session and TA-review questions made for the GI physiology lectures (2020–2026), set inside the lectures themselves. Each lecture is taught as organized notes in numbered sections and parts. Under every part come its core questions: together they cover everything the part&#x27;s questions test, one clear version of each point. The rest (repeats of a core question and harder versions) wait in a “More questions” dropdown at the end of the part. Tap an answer to see why it is right, why the others are wrong, and the slides that teach it.</p>
+  <p class="lede" id="lede">The clicker, discussion-session and TA-review questions made for the GI physiology lectures (2020–2026), set inside the nine topic chapters of the study book GI Physiology, Explained, in the book&#x27;s order. Every part opens with the book&#x27;s own text and pictures for that material (in colour here). Under it come the part&#x27;s core questions: together they cover everything the part&#x27;s questions test, one clear version of each point. The rest (repeats of a core question and harder versions) wait in a “More questions” dropdown at the end of the part. Tap an answer to see why it is right, why the others are wrong, and the slides that teach it.</p>
   <div class="tally" id="tally"></div>
   <div class="controls">
     <button class="btn" id="toponly" type="button" aria-pressed="false" title="One question from each group of similar questions (the clearest, newest version), at most 50 per lecture; groups asked most often across years come first">Top questions only <span class="cnt" id="topcnt"></span></button>
@@ -306,7 +316,7 @@ span.hlu{text-decoration:underline;text-decoration-color:var(--red);text-decorat
 <nav class="toc" id="toc" aria-label="Lectures"></nav>
 <div id="body"></div>
 <div id="hltools" hidden role="toolbar" aria-label="Highlight the selected text"><button type="button" class="sw y" data-a="y" title="Highlight yellow (H)" aria-label="Highlight yellow"></button><button type="button" class="sw g" data-a="g" title="Highlight green" aria-label="Highlight green"></button><button type="button" class="sw p" data-a="p" title="Highlight pink" aria-label="Highlight pink"></button><button type="button" class="u" data-a="u" title="Underline (U)">U</button><button type="button" data-a="x" title="Erase highlights and underlines in the selection (E)">Erase</button></div>
-<p class="foot">Sources: the GI exam toolkit on Canvas (2021–2025 TA reviews, professors&#x27; review, Q bank), the 2025 and 2026 discussion sessions, problem sets and week-14 clickers, and the GI parts of the 2019–2025 Physio II Exam 1 TA reviews, clickers, discussions and quizzes. Answers are the sources&#x27; keys, checked against this year&#x27;s lectures and Costanzo. Where a key was wrong, the correct answer is given and a "Correction" box says what changed. Stars and answers are saved in this browser only.</p>
+<p class="foot">Notes text and pictures: GI Physiology, Explained (written from this year&#x27;s lectures, the discussion sessions and Costanzo). Question sources: the GI exam toolkit on Canvas (2021–2025 TA reviews, professors&#x27; review, Q bank), the 2025 and 2026 discussion sessions, problem sets and week-14 clickers, and the GI parts of the 2019–2025 Physio II Exam 1 TA reviews, clickers, discussions and quizzes. Answers are the sources&#x27; keys, checked against this year&#x27;s lectures and Costanzo. Where a key was wrong, the correct answer is given and a "Correction" box says what changed. Stars and answers are saved in this browser only.</p>
 </main>
 <button class="btn floatreset" id="reset2" type="button" hidden>Clear my answers</button>
 
@@ -320,11 +330,12 @@ const TIER=!!(D.meta&&D.meta.tier), T2=TIER?(store.get(KEY+"-t2")||{}):{};  // N
 const done=store.get(KEY+"-done")||{}, stars=store.get(KEY+"-stars")||{};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const lgHTML=(L,cls)=>L&&L.length?`<div class="lgd${cls?" "+cls:""}"${cls?" hidden":""}><span class="lgl">Labels</span>${L.map(([k,v])=>`<b>${esc(k)}</b> ${esc(v)}`).join('<span class="sep">·</span>')}</div>`:"";  // Nov 6
 const lt=o=>String(o).trim().replace(/^\(/,"").charAt(0).toUpperCase();
 const byId={}; D.groups.forEach(g=>g.q.forEach(q=>{byId[q.id]=q;q._g=g}));
 const nq=D.groups.reduce((a,g)=>a+g.q.length,0), ng=D.groups.filter(g=>g.q.length>1).length;
 const nsrc=new Set(D.groups.flatMap(g=>g.q.flatMap(q=>q.src.map(s=>s.f||s.t+"|"+s.n)))).size;
-$("#tally").innerHTML=`<span><b>${nq}</b> questions</span><span><b>${ng}</b> groups of similar questions</span><span><b>${nsrc}</b> source files</span><span class="score" id="score"></span>`;
+$("#tally").innerHTML=`<span><b>${nq}</b> questions</span>${D.meta&&D.meta.uw?`<span><b>${D.groups.reduce((a,g)=>a+g.q.filter(q=>q.tier===1).length,0)}</b> core · <b>${D.groups.reduce((a,g)=>a+g.q.filter(q=>q.tier===2).length,0)}</b> more</span>`:`<span><b>${ng}</b> groups of similar questions</span>`}<span><b>${nsrc}</b> source files</span><span class="score" id="score"></span>`;
 $("#lede").textContent=D.meta.lede;
 
 function card(q,n,note){
@@ -332,7 +343,7 @@ function card(q,n,note){
   const opts=!q.rv?`<div class="opts">${q.o.map(o=>`<button class="opt" type="button" data-l="${esc(lt(o))}">${esc(o)}</button>`).join("")}</div>`
     :(q.o.length?`<ol class="olist" type="A">${q.o.map(o=>`<li>${esc(o)}</li>`).join("")}</ol>`:"")+`<button class="btn showans" type="button">Show answer</button>`;
   return `<article class="q${stars[q.id]?" starred":""}${q.t?" top":""}" data-id="${esc(q.id)}"><header><span class="qn">${n}</span>${badges}<button class="star" type="button" aria-pressed="${!!stars[q.id]}" aria-label="Star this question" title="Star">${stars[q.id]?"★":"☆"}</button></header>
-    <div class="stem" data-hk="s:${esc(q.id)}">${esc(q.s)}</div>${q.img?(FEAT?`<div class="pimg qpimg" data-cap="${esc("Question picture · "+String(q.s).slice(0,90))}" data-where="${esc(q.src[0]?q.src[0].t:"")}"><img class="qimg" loading="lazy" src="${q.img}" alt="${esc(q.in||"Question picture")}"></div>`:`<img class="qimg" loading="lazy" src="${q.img}" alt="${esc(q.in||"Question picture")}">`):(q.in?`<div class="inote">Picture in the source: ${esc(q.in)}</div>`:"")}
+    <div class="stem" data-hk="s:${esc(q.id)}">${esc(q.s)}</div>${q.img?(FEAT?`<div class="pimg qpimg" data-cap="${esc("Question picture · "+String(q.s).slice(0,90))}" data-where="${esc(q.src[0]?q.src[0].t:"")}"><img class="qimg" loading="lazy" src="${q.img}" alt="${esc(q.in||"Question picture")}"></div>`:`<img class="qimg" loading="lazy" src="${q.img}" alt="${esc(q.in||"Question picture")}">${lgHTML(q.lg,"qlgd")}`):(q.in?`<div class="inote">Picture in the source: ${esc(q.in)}</div>`:"")}
     ${opts}<div class="verdict" hidden></div><div class="reveal" hidden></div></article>`; }
 
 function answer(el,q,picked){
@@ -341,13 +352,13 @@ function answer(el,q,picked){
   const v=el.querySelector(".verdict");
   if(!q.rv){ const ok=picked?G.includes(picked):true; v.className="verdict "+(ok?"ok":"no"); v.innerHTML=(ok?"Correct":"Not quite")+`<button class="again" type="button">Try again</button>`; }
   else { v.className="verdict"; v.innerHTML=`<button class="again" type="button">Hide answer</button>`; const b=el.querySelector(".showans"); if(b) b.hidden=true; }
-  v.hidden=false;
+  v.hidden=false; const ql=el.querySelector(".qlgd"); if(ql) ql.hidden=false;
   let h=`<div class="ans" data-hk="a:${esc(q.id)}"><span class="lab">${G.length>1&&!q.rv?"Accepted answers":"Answer"}</span>${esc(label)}</div>`;
   if(q.fl.length) h+=q.fl.map((f,i)=>`<div class="fixbox" data-hk="f:${esc(q.id)}:${i}"><span class="lab">${q.ch?"Correction"+(q.k&&q.k.length?" · the source keyed "+esc(q.k.join(", ")):""):"Note on the source"}</span>${esc(f)}</div>`).join("");
   if(q.why) h+=`<div class="why" data-hk="w:${esc(q.id)}"><span class="lab">Why</span>${q.why}</div>`; else if(q.ex) h+=`<div class="why" data-hk="w:${esc(q.id)}"><span class="lab">From the source</span>${esc(q.ex)}</div>`;
   if(g.slides.length&&FEAT){ const nt=g.slides.filter(s=>s.tb).length, ns=g.slides.length-nt;
     h+=`<details class="slides"><summary>${ns?"Slides":""}${ns&&nt?" &amp; ":""}${nt?"Textbook":""} <span class="sct">(${[ns?ns+" slide"+(ns>1?"s":""):"",nt?nt+" textbook picture"+(nt>1?"s":""):""].filter(Boolean).join(", ")})</span></summary>${g.slides.map(figHTML).join("")}</details>`; }
-  else if(g.slides.length) h+=`<details class="slides"><summary>Slides (${g.slides.length})</summary>${g.slides.map(s=>`<figure><img loading="lazy" src="${s.src}" alt="${esc(s.cap)}"><figcaption>${esc(s.cap)} <small>· ${esc(s.where)}</small></figcaption></figure>`).join("")}</details>`;
+  else if(g.slides.length) h+=`<details class="slides"><summary>Slides (${g.slides.length})</summary>${g.slides.map(s=>`<figure><img loading="lazy" src="${s.src}" alt="${esc(s.cap)}"><figcaption>${esc(s.cap)} <small>· ${esc(s.where)}</small></figcaption>${lgHTML(s.lg)}</figure>`).join("")}</details>`;
   h+=`<details class="src"><summary>Sources (${q.src.length})</summary><ul>${q.src.map(s=>`<li>${esc(s.t)} — ${esc(s.n)}${s.sl?" (slide "+s.sl+")":""}</li>`).join("")}</ul>${q.tg.length?`<div>Taught: ${esc(q.tg.join("; "))}</div>`:""}</details>`;
   const r=el.querySelector(".reveal"); r.innerHTML=h; r.hidden=false;
   if(FEAT){ decorate(r); r.querySelectorAll("[data-hk]").forEach(applyHL); }
@@ -357,7 +368,7 @@ function answer(el,q,picked){
 }
 function resetCard(el){
   const v=el.querySelector(".verdict"), r=el.querySelector(".reveal");
-  v.hidden=true; v.innerHTML=""; r.hidden=true; r.innerHTML="";
+  v.hidden=true; v.innerHTML=""; r.hidden=true; r.innerHTML=""; const ql=el.querySelector(".qlgd"); if(ql) ql.hidden=true;
   el.querySelectorAll(".opt").forEach(b=>{ b.disabled=false; b.classList.remove("right","wrong"); b.querySelectorAll(".mk").forEach(m=>m.remove()); });
   const b=el.querySelector(".showans"); if(b) b.hidden=false;
 }
@@ -386,7 +397,7 @@ function sumPanel(l){
 const PS=FEAT?(store.get(KEY+"-picstars")||{}):{}, HL=FEAT?(store.get(KEY+"-hl")||{}):{};
 function figHTML(s){
   const cu=s.cu?`<div class="cuw"><span class="cul">Close-up of the picture</span><div class="pimg" data-cap="${esc("Close-up · "+s.cap)}" data-where="${esc(s.where)}"><img loading="lazy" class="cuimg" src="${s.cu}" alt="${esc("Close-up: "+s.cap)}"></div></div>`:"";
-  return `<figure class="sf${s.tb?" tbk":""}"><div class="pimg" data-cap="${esc(s.cap)}" data-where="${esc(s.where)}"><img loading="lazy" src="${s.src}" alt="${esc(s.cap)}"></div>${cu}<figcaption>${s.tb?'<span class="tbb">Textbook</span>':""}${esc(s.cap)} <small>· ${esc(s.where)}</small></figcaption></figure>`; }
+  return `<figure class="sf${s.tb?" tbk":""}"><div class="pimg" data-cap="${esc(s.cap)}" data-where="${esc(s.where)}"><img loading="lazy" src="${s.src}" alt="${esc(s.cap)}"></div>${cu}<figcaption>${s.tb?'<span class="tbb">Textbook</span>':""}${esc(s.cap)} <small>· ${esc(s.where)}</small></figcaption>${lgHTML(s.lg)}</figure>`; }
 function picMeta(p){
   const img=p.querySelector("img"), fig=p.closest("figure"); let cap=p.dataset.cap||"", where=p.dataset.where||"";
   if(!cap&&fig){ const fc=fig.querySelector("figcaption"); if(fc){ const sm=fc.querySelector("small"); if(!where&&sm) where=sm.textContent.replace(/^\s*·\s*/,"");
@@ -475,7 +486,8 @@ function hlTools(){ const T=$("#hltools"); if(!FEAT) return; const bl=selBlocks(
   let top=rr.top-h-8; if(top<8) top=rr.bottom+8; T.style.top=top+"px"; T.style.left=Math.min(Math.max(8,rr.left+rr.width/2-w/2),innerWidth-w-8)+"px"; }
 
 // ---- build the page
-let toc=`<h3>Lectures</h3><ol>`, body="";
+const UW=(D.meta&&D.meta.uw)||"Lecture";  // Nov 8: biochem page is organized by book chapter
+let toc=`<h3>${UW}s</h3><ol>`, body="";
 for(const l of D.lectures){
   const gs=D.groups.filter(g=>g.l===l.id); let k=0, nc=0, inner=""; const nt=gs.reduce((a,g)=>a+g.q.filter(q=>q.t).length,0);
   const tag=l.id.split("-")[1];
@@ -484,7 +496,7 @@ for(const l of D.lectures){
   const US=UNITS.map((u,i)=>[u,i]).filter(([u])=>u.l===l.id);
   if(US.length){ let s=0, lastS=null;
     if(US[0][0].pn){ // lecture outline: sections and their parts, each a link
-      let o=`<nav class="lout" aria-label="Lecture outline"><span class="t">Lecture outline · ${new Set(US.map(([u])=>u.sn)).size} sections, ${US.length} parts</span><ol>`;
+      let o=`<nav class="lout" aria-label="${UW} outline"><span class="t">${UW} outline · ${new Set(US.map(([u])=>u.sn)).size} sections, ${US.length} parts</span><ol>`;
       for(const [u] of US){ if(u.sn!==lastS){ if(lastS!==null) o+=`</ol></li>`; lastS=u.sn; o+=`<li><a href="#${l.id}-s${u.sn}">${u.s}</a><ol>`; }
         o+=`<li><a href="#${l.id}-p${u.pn}"><span class="pnum">${u.pn}</span>${u.h}</a></li>`; }
       inner+=o+`</ol></li></ol></nav>`; lastS=null; }
@@ -536,7 +548,7 @@ document.addEventListener("click",e=>{
   if(t.classList.contains("star")&&el){ const id=el.dataset.id; if(stars[id]) delete stars[id]; else stars[id]=1; store.set(KEY+"-stars",stars);
     t.setAttribute("aria-pressed",!!stars[id]); t.textContent=stars[id]?"★":"☆"; el.classList.toggle("starred",!!stars[id]); return; }
   if(FEAT){ if(t.classList.contains("pstar")){ togglePic(t); return; } if(t.tagName==="IMG"&&t.closest(".pimg")&&!t.closest("#lb2")){ openViewer(t); return; } }
-  else if(t.tagName==="IMG"&&(t.closest(".slides")||t.closest(".sumbody")||t.closest(".primer"))){ const lb=document.createElement("div"); lb.id="lb"; lb.innerHTML=`<img src="${t.getAttribute("src")}" alt="">`; lb.onclick=()=>lb.remove(); document.body.appendChild(lb); }
+  else if(t.tagName==="IMG"&&(t.closest(".slides")||t.closest(".sumbody")||t.closest(".primer"))){ const lb=document.createElement("div"); lb.id="lb"; const lg=t.closest("figure")&&t.closest("figure").querySelector(".lgd"); lb.innerHTML=`<img src="${t.getAttribute("src")}" alt="">`+(lg?lg.outerHTML:""); lb.onclick=()=>lb.remove(); document.body.appendChild(lb); }
 });
 document.addEventListener("keydown",e=>{
   if(FEAT&&LB){ if(e.key==="Escape"){ closeViewer(); e.preventDefault(); } else if(e.key==="ArrowRight"){ LB.step(1); e.preventDefault(); } else if(e.key==="ArrowLeft"){ LB.step(-1); e.preventDefault(); } return; }
