@@ -210,6 +210,10 @@ details.primer.fold:not([open]) h3{margin-bottom:0}
 details.primer.fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
 .primer h4{font-family:var(--sans);font-size:.76rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);margin:18px 0 4px}
 .primer ul,.primer ol{margin:.35em 0;padding-left:1.25em;max-width:78ch}
+.primer .rrv{margin:20px 0 6px;padding:10px 16px 10px;border:1px solid var(--rule-2);border-left:4px solid var(--accent);border-radius:8px;background:var(--accent-soft);max-width:82ch}
+.primer .rrv h4{margin:2px 0 6px;color:var(--accent)}
+.primer .rrv ul{margin:0;padding-left:1.15em}
+.primer .rrv li{margin:.18em 0;font-family:var(--sans);font-size:.95rem;line-height:1.4}
 .primer li{margin:.22em 0;line-height:1.56}
 .primer li>ul{margin:.15em 0}
 .primer .tw{overflow-x:auto;margin:.6em 0 .4em;max-width:100%}
@@ -354,7 +358,7 @@ function answer(el,q,picked){
   else { v.className="verdict"; v.innerHTML=`<button class="again" type="button">Hide answer</button>`; const b=el.querySelector(".showans"); if(b) b.hidden=true; }
   v.hidden=false; const ql=el.querySelector(".qlgd"); if(ql) ql.hidden=false;
   let h=`<div class="ans" data-hk="a:${esc(q.id)}"><span class="lab">${G.length>1&&!q.rv?"Accepted answers":"Answer"}</span>${esc(label)}</div>`;
-  if(q.fl.length) h+=q.fl.map((f,i)=>`<div class="fixbox" data-hk="f:${esc(q.id)}:${i}"><span class="lab">${q.ch?"Correction"+(q.k&&q.k.length?" · the source keyed "+esc(q.k.join(", ")):""):"Note on the source"}</span>${esc(f)}</div>`).join("");
+  if(q.fl.length) h+=q.fl.map((f,i)=>`<div class="fixbox" data-hk="f:${esc(q.id)}:${i}"><span class="lab">${D.meta.feat?"Correction":(q.ch?"Correction"+(q.k&&q.k.length?" · the source keyed "+esc(q.k.join(", ")):""):"Note on the source")}</span>${esc(f)}</div>`).join("");
   if(q.why) h+=`<div class="why" data-hk="w:${esc(q.id)}"><span class="lab">Why</span>${q.why}</div>`; else if(q.ex) h+=`<div class="why" data-hk="w:${esc(q.id)}"><span class="lab">From the source</span>${esc(q.ex)}</div>`;
   if(g.slides.length&&FEAT){ const nt=g.slides.filter(s=>s.tb).length, ns=g.slides.length-nt;
     h+=`<details class="slides"><summary>${ns?"Slides":""}${ns&&nt?" &amp; ":""}${nt?"Textbook":""} <span class="sct">(${[ns?ns+" slide"+(ns>1?"s":""):"",nt?nt+" textbook picture"+(nt>1?"s":""):""].filter(Boolean).join(", ")})</span></summary>${g.slides.map(figHTML).join("")}</details>`; }
