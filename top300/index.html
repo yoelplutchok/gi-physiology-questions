@@ -328,7 +328,7 @@ body.topn .t2body article.q>header .qn{font-size:.76rem;font-weight:600;color:va
 </main>
 <button class="btn floatreset" id="reset2" type="button" hidden>Clear my answers</button>
 
-<script src="data.js"></script>
+<script src="data.js?v=45161929d8"></script>
 <script>
 (function(){
 const D=window.GIQ, KEY="gi-phys-top300", FEAT=!!(D.meta&&D.meta.feat), TOPN=(D.meta&&D.meta.top)||0;
@@ -344,7 +344,7 @@ const byId={}; D.groups.forEach(g=>g.q.forEach(q=>{byId[q.id]=q;q._g=g}));
 const nq=D.groups.reduce((a,g)=>a+g.q.length,0), ng=D.groups.filter(g=>g.q.length>1).length;
 const nsrc=new Set(D.groups.flatMap(g=>g.q.flatMap(q=>q.src.map(s=>s.f||s.t+"|"+s.n)))).size;
 $("#tally").innerHTML=`<span><b>${nq}</b> questions</span>${D.meta&&D.meta.uw?`<span><b>${D.groups.reduce((a,g)=>a+g.q.filter(q=>q.tier===1).length,0)}</b> core · <b>${D.groups.reduce((a,g)=>a+g.q.filter(q=>q.tier===2).length,0)}</b> more</span>`:`<span><b>${ng}</b> groups of similar questions</span>`}<span><b>${nsrc}</b> source files</span><span class="score" id="score"></span>`;
-$("#lede").textContent=D.meta.lede;
+$("#lede").textContent=TOPN?"":D.meta.lede;
 if(TOPN){ document.body.classList.add("topn"); $("#tally").innerHTML=`<span><b>${TOPN}</b> top questions, numbered</span><span><b>${nq-TOPN}</b> other questions in the dropdowns</span><span><b>${nsrc}</b> source files</span><span class="score" id="score"></span>`; }
 
 function card(q,n,note){
