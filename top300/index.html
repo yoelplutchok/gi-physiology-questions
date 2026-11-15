@@ -300,15 +300,16 @@ span.hlu{text-decoration:underline;text-decoration-color:var(--red);text-decorat
 /* top-300 page: the numbered questions carry a clear number chip; the extras in the dropdowns keep a quiet label */
 body.topn article.q>header .qn{font-size:.95rem;color:var(--ink);background:var(--accent-soft);border-radius:6px;padding:1px 9px}
 body.topn .t2body article.q>header .qn{font-size:.76rem;font-weight:600;color:var(--ink-3);background:none;padding:0}
+.lede:empty{display:none}
 </style>
 
 </head>
 <body>
 <main class="wrap">
-<nav class="homes"><a class="home" href="https://yoelplutchok.github.io/gi/">← All GI question pages</a><a class="home" href="../">← Full GI physiology page (all 819 questions)</a></nav><style>.homes{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:20px}.home{font-family:var(--sans);font-size:.84rem;font-weight:600;color:var(--accent);text-decoration:none}.home:hover{text-decoration:underline}</style><header class="mast">
+<nav class="homes"><a class="home" href="https://yoelplutchok.github.io/gi/top300/">← GI Top 300 pages</a></nav><style>.homes{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:20px}.home{font-family:var(--sans);font-size:.84rem;font-weight:600;color:var(--accent);text-decoration:none}.home:hover{text-decoration:underline}</style><header class="mast">
   <div class="eyebrow">GI exam · Mon Nov 23 2026 · Medical Physiology I</div>
   <h1>GI Physiology: Top 300 Questions</h1>
-  <p class="lede" id="lede">The 300 highest-yield questions from the GI physiology page, numbered 1 to 300 and set inside the same chapter notes. They were chosen from all 819 questions as one pool, not chapter by chapter: the questions this year&#x27;s faculty wrote, one clear question for each fact the 2026 objectives name, and, for the facts asked most often across the years, a second question that uses the fact in a different way. Near-copies were left out. Every other question waits in an “Other questions” dropdown at the end of its part; those are not part of the 300. Tap an answer to see why it is right, why the others are wrong, and the slides that teach it.</p>
+  <p class="lede" id="lede"></p>
   <div class="tally" id="tally"></div>
   <div class="controls">
     <button class="btn" id="toponly" type="button" aria-pressed="false" title="One question from each group of similar questions (the clearest, newest version), at most 50 per lecture; groups asked most often across years come first">Top questions only <span class="cnt" id="topcnt"></span></button>
@@ -323,7 +324,7 @@ body.topn .t2body article.q>header .qn{font-size:.76rem;font-weight:600;color:va
 <nav class="toc" id="toc" aria-label="Lectures"></nav>
 <div id="body"></div>
 <div id="hltools" hidden role="toolbar" aria-label="Highlight the selected text"><button type="button" class="sw y" data-a="y" title="Highlight yellow (H)" aria-label="Highlight yellow"></button><button type="button" class="sw g" data-a="g" title="Highlight green" aria-label="Highlight green"></button><button type="button" class="sw p" data-a="p" title="Highlight pink" aria-label="Highlight pink"></button><button type="button" class="u" data-a="u" title="Underline (U)">U</button><button type="button" data-a="x" title="Erase highlights and underlines in the selection (E)">Erase</button></div>
-<p class="foot">The 300 were picked on Nov 14 2026 from the 819 questions of the full GI physiology page (discussion sessions, Canvas quizzes, problem sets, faculty reviews and TA reviews made for these lectures in some year). Answers are the sources&#x27; keys, checked against this year&#x27;s lectures and Costanzo. Where a key was wrong, the correct answer is given and a &quot;Correction&quot; box says what changed. Stars and answers on this page are saved in this browser only, separately from the full page.</p>
+<p class="foot">Answers are the sources&#x27; keys, checked against this year&#x27;s lectures and Costanzo. Where a key was wrong, the correct answer is given and a &quot;Correction&quot; box says what changed. Stars and answers on this page are saved in this browser only.</p>
 </main>
 <button class="btn floatreset" id="reset2" type="button" hidden>Clear my answers</button>
 
