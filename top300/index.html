@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GI Physiology: Top 300 Questions</title>
+<title>GI Physiology: Top 75 Questions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Source+Sans+3:wght@400;600;700&display=swap">
 <style>
@@ -301,14 +301,18 @@ span.hlu{text-decoration:underline;text-decoration-color:var(--red);text-decorat
 body.topn article.q>header .qn{font-size:.95rem;color:var(--ink);background:var(--accent-soft);border-radius:6px;padding:1px 9px}
 body.topn .t2body article.q>header .qn{font-size:.76rem;font-weight:600;color:var(--ink-3);background:none;padding:0}
 .lede:empty{display:none}
+/* Nov 17: rapid-review box after the Why of each answered question: the printed box as a picture, red underlines on top */
+.rrw{margin:12px 0 6px}.rrw .lab{font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:6px}.rrb{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:0 0 10px}
+.rrf{position:relative;max-width:100%;background:#fff;box-shadow:0 0 0 1px var(--rule-2)}.rrf img{display:block;width:100%;height:auto}
+.rrf i{position:absolute;height:2px;background:#d42a20;border-radius:1px;pointer-events:none}
 </style>
 
 </head>
 <body>
 <main class="wrap">
-<nav class="homes"><a class="home" href="https://yoelplutchok.github.io/gi/top300/">← GI Top 300 pages</a></nav><style>.homes{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:20px}.home{font-family:var(--sans);font-size:.84rem;font-weight:600;color:var(--accent);text-decoration:none}.home:hover{text-decoration:underline}</style><header class="mast">
+<nav class="homes"><a class="home" href="https://yoelplutchok.github.io/gi/top300/">← GI Top question pages</a></nav><style>.homes{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:20px}.home{font-family:var(--sans);font-size:.84rem;font-weight:600;color:var(--accent);text-decoration:none}.home:hover{text-decoration:underline}</style><header class="mast">
   <div class="eyebrow">GI exam · Mon Nov 23 2026 · Medical Physiology I</div>
-  <h1>GI Physiology: Top 300 Questions</h1>
+  <h1>GI Physiology: Top 75 Questions</h1>
   <p class="lede" id="lede"></p>
   <div class="tally" id="tally"></div>
   <div class="controls">
@@ -328,7 +332,7 @@ body.topn .t2body article.q>header .qn{font-size:.76rem;font-weight:600;color:va
 </main>
 <button class="btn floatreset" id="reset2" type="button" hidden>Clear my answers</button>
 
-<script src="data.js?v=45161929d8"></script>
+<script src="data.js?v=0ccb3fe48b"></script>
 <script>
 (function(){
 const D=window.GIQ, KEY="gi-phys-top300", FEAT=!!(D.meta&&D.meta.feat), TOPN=(D.meta&&D.meta.top)||0;
@@ -365,6 +369,7 @@ function answer(el,q,picked){
   let h=`<div class="ans" data-hk="a:${esc(q.id)}"><span class="lab">${G.length>1&&!q.rv?"Accepted answers":"Answer"}</span>${esc(label)}</div>`;
   if(q.fl.length) h+=q.fl.map((f,i)=>`<div class="fixbox" data-hk="f:${esc(q.id)}:${i}"><span class="lab">${D.meta.feat?"Correction":(q.ch?"Correction"+(q.k&&q.k.length?" · the source keyed "+esc(q.k.join(", ")):""):"Note on the source")}</span>${esc(f)}</div>`).join("");
   if(q.why) h+=`<div class="why" data-hk="w:${esc(q.id)}"><span class="lab">Why</span>${q.why}</div>`; else if(q.ex) h+=`<div class="why" data-hk="w:${esc(q.id)}"><span class="lab">From the source</span>${esc(q.ex)}</div>`;
+  if(q.rr) h+=q.rr;
   if(g.slides.length&&FEAT){ const nt=g.slides.filter(s=>s.tb).length, ns=g.slides.length-nt;
     h+=`<details class="slides"><summary>${ns?"Slides":""}${ns&&nt?" &amp; ":""}${nt?"Textbook":""} <span class="sct">(${[ns?ns+" slide"+(ns>1?"s":""):"",nt?nt+" textbook picture"+(nt>1?"s":""):""].filter(Boolean).join(", ")})</span></summary>${g.slides.map(figHTML).join("")}</details>`; }
   else if(g.slides.length) h+=`<details class="slides"><summary>Slides (${g.slides.length})</summary>${g.slides.map(s=>`<figure><img loading="lazy" src="${s.src}" alt="${esc(s.cap)}"><figcaption>${esc(s.cap)} <small>· ${esc(s.where)}</small></figcaption>${lgHTML(s.lg)}</figure>`).join("")}</details>`;
