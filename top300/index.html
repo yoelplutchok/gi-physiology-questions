@@ -301,6 +301,9 @@ span.hlu{text-decoration:underline;text-decoration-color:var(--red);text-decorat
 body.topn article.q>header .qn{font-size:.95rem;color:var(--ink);background:var(--accent-soft);border-radius:6px;padding:1px 9px}
 body.topn .t2body article.q>header .qn{font-size:.76rem;font-weight:600;color:var(--ink-3);background:none;padding:0}
 .lede:empty{display:none}
+.primer.notes{margin:30px 0 6px;padding:9px 16px 10px}.primer.notes h3{margin:1px 0 0}.primer.notes .pq{margin-top:3px}
+.why:has(p){padding:8px 16px 10px}.why p{margin:.6em 0 0;line-height:1.62;max-width:80ch}.why .lab+p{margin-top:.2em}
+.why ul,.why ol{margin:.3em 0 0;padding-left:1.4em;max-width:80ch}.why li{margin:.22em 0;line-height:1.52}
 /* Nov 17: rapid-review box after the Why of each answered question: the printed box as a picture, red underlines on top */
 .rrw{margin:12px 0 6px}.rrw .lab{font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:6px}.rrb{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:0 0 10px}
 .rrf{position:relative;max-width:100%;background:#fff;box-shadow:0 0 0 1px var(--rule-2)}.rrf img{display:block;width:100%;height:auto}
@@ -332,7 +335,7 @@ body.topn .t2body article.q>header .qn{font-size:.76rem;font-weight:600;color:va
 </main>
 <button class="btn floatreset" id="reset2" type="button" hidden>Clear my answers</button>
 
-<script src="data.js?v=0ccb3fe48b"></script>
+<script src="data.js?v=637b86d8c9"></script>
 <script>
 (function(){
 const D=window.GIQ, KEY="gi-phys-top300", FEAT=!!(D.meta&&D.meta.feat), TOPN=(D.meta&&D.meta.top)||0;
@@ -596,7 +599,7 @@ if(UNITS.length) $("#toponly").title=`At least two questions from every ${NOTES?
 if(TIER) $("#toponly").hidden=true;  // Nov 5 (anatomy): no Top filter; every part shows its core questions and a "More questions" dropdown
 $("#toponly").onclick=function(){ const on=this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",on); document.body.classList.toggle("toponly",on); try{localStorage.setItem(KEY+"-top",on?"1":"0")}catch(e){} };
 if(!TIER){ try{ if(/[?&]top\b/.test(location.search)||localStorage.getItem(KEY+"-top")==="1") $("#toponly").click(); }catch(e){ if(/[?&]top\b/.test(location.search)) $("#toponly").click(); } }
-if(UNITS.length){ const b=$("#nosum"); b.hidden=false; b.textContent=PW[0];
+if(D.meta.nonotes){} else if(UNITS.length){ const b=$("#nosum"); b.hidden=false; b.textContent=PW[0];
   b.onclick=function(){ const on=this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",on); this.textContent=on?PW[1]:PW[0]; document.body.classList.toggle("noprimer",on); try{localStorage.setItem(KEY+"-noprimer",on?"1":"0")}catch(e){} };
   try{ if(localStorage.getItem(KEY+"-noprimer")==="1") b.click(); }catch(e){} }
 else if(Object.keys(SUM).length){ const b=$("#nosum"); b.hidden=false;
